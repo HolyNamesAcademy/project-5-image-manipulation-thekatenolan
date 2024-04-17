@@ -39,10 +39,20 @@ public class ImageManipulator {
      * @param image image to transform
      * @return the image transformed to grayscale
      */
-    public static Img ConvertToGrayScale(Img image) {
-        // Implement this method and remove the line below
-        throw new UnsupportedOperationException();
-    }
+        public static Img ConvertToGrayScale(Img image) {
+            for(int l = 0; l < image.GetHeight(); l++){
+                for(int c = 0; c < image.GetWidth(); c++){
+                    int r = image.GetRGB(c, l).GetRed();
+                    int b = image.GetRGB(c, l).GetBlue();
+                    int g = image.GetRGB(c, l).GetGreen();
+                    int avg = (r+g+b)/3;
+                    image.SetRGB(c, l, new RGB(avg, avg, avg));
+
+                }
+            }
+            // Implement this method and remove the line below
+            return image;
+        }
 
     /**
      * Inverts the image. To invert the image, for each channel of each pixel, we get
@@ -75,15 +85,18 @@ public class ImageManipulator {
      * @return image transformed to sepia
      */
     public static Img ConvertToSepia(Img image) {
-        for (int i = 0; i < image.GetWidth(); i++) {
-            for (int j = 0; j < image.GetHeight(); j++) {
-                RGB temp = image.GetRGB(i, j);
-                temp.SetRed((int) ((0.393 * temp.GetRed()) + (0.769 * temp.GetGreen()) + (0.189 * temp.GetBlue())));
-                temp.SetGreen((int) ((0.349*temp.GetRed())+(0.686*temp.GetGreen())+(0.168*temp.GetBlue())));
-                temp.SetBlue((int) ((0.272*temp.GetRed())+(0.534*temp.GetGreen())+(0.131*temp.GetBlue())));
-                image.SetRGB(i,j,temp);
+        for(int l = 0; l < image.GetHeight(); l++) {
+            for (int c = 0; c < image.GetWidth(); c++) {
+                int r = image.GetRGB(c, l).GetRed();
+                int b = image.GetRGB(c, l).GetBlue();
+                int g = image.GetRGB(c, l).GetGreen();
+                int nr = (int)(.393*r + .769*g + .189*b);
+                int ng = (int)(.349*r + .686*g + .168*b);
+                int nb = (int)(.272*r + .534*g + .131*b);
+                image.SetRGB(c, l, new RGB(nr, ng, nb));
             }
         }
+        // Implement this method and remove the line below
         return image;
     }
 
@@ -113,10 +126,12 @@ public class ImageManipulator {
         }
         Collections.sort(lums);
         double median = 0;
+        int index1 = lums.size()/2;
+        int index2 = (lums.size()/2)+1;
         if (lums.size() % 2 == 1)
             median = lums.get((lums.size() / 2));
         else
-            median = (lums.get((int)((lums.size() / 2) + (lums.get(lums.size() / 2) + 1))) / 2);
+            median = ((lums.get(index1) + (lums.get(index2))) / 2);
         for (int i = 0; i < image.GetWidth(); i++) {
             for (int j = 0; j < image.GetHeight(); j++) {
                 RGB rgb = image.GetRGB(i, j);
